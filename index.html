@@ -3,100 +3,151 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Se fudeu na bet</title>
+    <title>Clone Netflix</title>
     <style>
         body {
+            margin: 0;
+            padding: 0;
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
+            background-color: #141414;
+            color: #fff;
+        }
+
+        /* Estilo da barra de navegação */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            background-color: #141414;
+        }
+
+        .navbar img {
+            width: 120px;
+        }
+
+        .navbar ul {
+            list-style-type: none;
+            display: flex;
             margin: 0;
             padding: 0;
         }
-        header {
-            background-color: #007bff;
-            color: white;
-            padding: 10px 0;
-            text-align: center;
+
+        .navbar ul li {
+            margin-left: 20px;
         }
-        nav {
-            margin: 20px 0;
-        }
-        nav a {
-            margin: 0 15px;
-            color: #007bff;
+
+        .navbar ul li a {
+            color: #fff;
             text-decoration: none;
+            font-weight: bold;
         }
-        .container {
-            width: 80%;
-            margin: auto;
+
+        .navbar ul li a:hover {
+            color: #e50914;
         }
-        .betting-form {
-            background: white;
-            padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+        /* Estilo do banner principal */
+        .banner {
+            position: relative;
+            height: 600px;
+            background-image: url('https://www.themoviedb.org/t/p/original/5N6U8dCxQztS3zAyXWhLCMmtF59.jpg');
+            background-size: cover;
+            background-position: center;
         }
-        .betting-form input {
-            margin: 10px 0;
-            padding: 10px;
-            width: calc(100% - 22px);
+
+        .banner-content {
+            position: absolute;
+            bottom: 50px;
+            left: 50px;
         }
-        .betting-form button {
-            background-color: #007bff;
-            color: white;
+
+        .banner h1 {
+            font-size: 60px;
+            margin: 0;
+        }
+
+        .banner p {
+            font-size: 20px;
+            max-width: 600px;
+        }
+
+        .banner button {
+            padding: 10px 20px;
+            background-color: #e50914;
             border: none;
-            padding: 10px;
+            color: white;
+            font-size: 18px;
             cursor: pointer;
         }
-        .betting-form button:hover {
-            background-color: #0056b3;
+
+        .banner button:hover {
+            background-color: #f40612;
+        }
+
+        /* Estilo da seção de filmes */
+        .movies-section {
+            padding: 40px;
+        }
+
+        .movies-section h2 {
+            margin-bottom: 20px;
+        }
+
+        .movies-grid {
+            display: flex;
+            gap: 15px;
+        }
+
+        .movie {
+            width: 200px;
+        }
+
+        .movie img {
+            width: 100%;
+            border-radius: 8px;
         }
     </style>
 </head>
 <body>
+    <!-- Barra de navegação -->
+    <nav class="navbar">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/7/7a/Logonetflix.png" alt="Logo Netflix">
+        <ul>
+            <li><a href="#">Início</a></li>
+            <li><a href="#">Séries</a></li>
+            <li><a href="#">Filmes</a></li>
+            <li><a href="#">Mais recentes</a></li>
+            <li><a href="#">Minha lista</a></li>
+        </ul>
+    </nav>
 
-<header>
-    <h1>Se Fudeu Na Bet</h1>
-</header>
-
-<nav>
-    <a href="#home">Home</a>
-    <a href="#sobre">Sobre</a>
-    <a href="#contato">Contato</a>
-</nav>
-
-<div class="container">
-    <h2>Aposte Agora</h2>
-    <div class="betting-form">
-        <label for="nome">Seu Nome:</label>
-        <input type="text" id="nome" placeholder="Digite seu nome">
-
-        <label for="valor">Valor da Aposta:</label>
-        <input type="number" id="valor" placeholder="Digite o valor">
-
-        <label for="jogo">Escolha o Jogo:</label>
-        <select id="jogo">
-            <option value="futebol">Futebol</option>
-            <option value="basquete">Basquete</option>
-            <option value="corrida">Corrida</option>
-        </select>
-
-        <button type="button" onclick="realizarAposta()">Apostar</button>
+    <!-- Banner principal -->
+    <div class="banner">
+        <div class="banner-content">
+            <h1>Filme em Destaque</h1>
+            <p>Assista agora este grande sucesso disponível apenas para você. Aventura, emoção e muito mais te aguardam!</p>
+            <button>Assistir Agora</button>
+        </div>
     </div>
-</div>
 
-<script>
-    function realizarAposta() {
-        const nome = document.getElementById('nome').value;
-        const valor = document.getElementById('valor').value;
-        const jogo = document.getElementById('jogo').value;
-
-        if (nome && valor && jogo) {
-            alert(`Aposta realizada!\nNome: ${nome}\nValor: R$${valor}\nJogo: ${jogo}`);
-        } else {
-            alert('Por favor, preencha todos os campos.');
-        }
-    }
-</script>
-
+    <!-- Seção de filmes -->
+    <div class="movies-section">
+        <h2>Populares na Netflix</h2>
+        <div class="movies-grid">
+            <div class="movie">
+                <img src="https://image.tmdb.org/t/p/w200/qJRB789ceLryrLvOKrZqLKr2CGf.jpg" alt="Filme 1">
+            </div>
+            <div class="movie">
+                <img src="https://image.tmdb.org/t/p/w200/t9nyEa9eh9Pu5WuYIv8Ip1gYPNm.jpg" alt="Filme 2">
+            </div>
+            <div class="movie">
+                <img src="https://image.tmdb.org/t/p/w200/yF1eOkaYvwiORauRCPWznV9xVvi.jpg" alt="Filme 3">
+            </div>
+            <div class="movie">
+                <img src="https://image.tmdb.org/t/p/w200/nGykHF0PeAsD2EoUPgLlfIjeUH8.jpg" alt="Filme 4">
+            </div>
+        </div>
+    </div>
 </body>
 </html>
