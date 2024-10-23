@@ -3,97 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flappy Bird Clone</title>
+    <title>Pac-Man Clone</title>
     <style>
         body {
             margin: 0;
-            overflow: hidden;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: black;
         }
-        canvas {
-            background: #70c5ce;
-            display: block;
-            margin: auto;
+        #gameCanvas {
+            border: 2px solid #fff;
+            background-color: #000;
         }
     </style>
 </head>
 <body>
-    <canvas id="gameCanvas" width="400" height="600"></canvas>
+    <canvas id="gameCanvas" width="400" height="400"></canvas>
     <script>
         const canvas = document.getElementById("gameCanvas");
         const ctx = canvas.getContext("2d");
+        const gridSize = 20;
+        const canvasSize = 20; // 20x20 grids
+        let pacMan = { x: 9, y: 9, direction: { x: 0, y: 0 }, mouthOpen: true };
+        let score = 0;
+        const pellets = Array.from({ length: canvasSize * canvasSize }, (_, index) => {
+            const x = index % canvasSize;
+            const y = Math.floor(index / canvasSize);
+            return { x, y, eaten: false };
+        });
 
-        const bird = {
-            x: 50,
-            y: 150,
-            width: 30,
-            height: 30,
-            gravity: 0.5,
-            lift: -10,
-            velocity: 0,
-            show() {
-                ctx.fillStyle = "yellow";
-                ctx.fillRect(this.x, this.y, this.width, this.height);
-            },
-            update() {
-                this.velocity += this.gravity;
-                this.y += this.velocity;
-                if (this.y + this.height >= canvas.height) {
-                    this.y = canvas.height - this.height;
-                    this.velocity = 0;
-                }
-                if (this.y < 0) {
-                    this.y = 0;
-                    this.velocity = 0;
-                }
-            },
-            flap() {
-                this.velocity += this.lift;
-            }
-        };
-
-        const pipes = [];
-        let frameCount = 0;
-        const pipeWidth = 50;
-        const pipeGap = 100;
-
-        function addPipe() {
-            const height = Math.random() * (canvas.height - pipeGap - 20) + 10;
-            pipes.push({ x: canvas.width, height });
+        function drawPacMan() {
+            ctx.fillStyle = "yellow";
+            ctx.beginPath();
+            const mouth = pacMan.mouthOpen ? 0.2 : 0;
+            ctx.arc(pacMan.x * gridSize + gridSize / 2, pacMan.y * gridSize + gridSize / 2, gridSize / 2, mouth * Math.PI, (2 - mouth) * Math.PI);
+            ctx.lineTo(pacMan.x * gridSize + gridSize / 2, pacMan.y * gridSize + gridSize / 2);
+            ctx.fill();
         }
 
-        function updatePipes() {
-            for (let i = pipes.length - 1; i >= 0; i--) {
-                pipes[i].x -= 2;
-                if (pipes[i].x + pipeWidth < 0) {
-                    pipes.splice(i, 1);
+        function drawPellets() {
+            ctx.fillStyle = "white";
+            for (const pellet of pellets) {
+                if (!pellet.eaten) {
+                    ctx.beginPath();
+                    ctx.arc(pellet.x * gridSize + gridSize / 2, pellet.y * gridSize + gridSize / 2, gridSize / 8, 0, Math.PI * 2);
+                    ctx.fill();
                 }
             }
         }
 
-        function drawPipes() {
-            ctx.fillStyle = "green";
-            for (const pipe of pipes) {
-                ctx.fillRect(pipe.x, 0, pipeWidth, pipe.height);
-                ctx.fillRect(pipe.x, pipe.height + pipeGap, pipeWidth, canvas.height - pipe.height - pipeGap);
+        function update() {
+            pacMan.x += pacMan.direction.x;
+            pacMan.y += pacMan.direction.y;
+
+            if (pacMan.x < 0) pacMan.x = canvasSize - 1;
+            if (pacMan.x >= canvasSize) pacMan.x = 0;
+            if (pacMan.y < 0) pacMan.y = canvasSize - 1;
+            if (pacMan.y >= canvasSize) pacMan.y = 0;
+
+            for (const pellet of pellets) {
+                if (pellet.x === pacMan.x && pellet.y === pacMan.y && !pellet.eaten) {
+                    pellet.eaten = true;
+                    score++;
+                }
             }
+
+            pacMan.mouthOpen = !pacMan.mouthOpen;
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawPellets();
+            drawPacMan();
+            ctx.fillStyle = "white";
+            ctx.fillText("Score: " + score, 10, 20);
         }
 
         function gameLoop() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            bird.update();
-            bird.show();
-            updatePipes();
-            drawPipes();
-
-            if (frameCount % 75 === 0) {
-                addPipe();
-            }
-
-            frameCount++;
+            update();
+            draw();
             requestAnimationFrame(gameLoop);
         }
 
-        window.addEventListener("keydown", () => bird.flap());
+        window.addEventListener("keydown", (e) => {
+            switch (e.key) {
+                case "ArrowUp":
+                    pacMan.direction = { x: 0, y: -1 };
+                    break;
+                case "ArrowDown":
+                    pacMan.direction = { x: 0, y: 1 };
+                    break;
+                case "ArrowLeft":
+                    pacMan.direction = { x: -1, y: 0 };
+                    break;
+                case "ArrowRight":
+                    pacMan.direction = { x: 1, y: 0 };
+                    break;
+            }
+        });
+
         gameLoop();
     </script>
 </body>
