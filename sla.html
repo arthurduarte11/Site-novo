@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flappy Bird Clone</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+        canvas {
+            background: #70c5ce;
+            display: block;
+            margin: auto;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas" width="400" height="600"></canvas>
+    <script>
+        const canvas = document.getElementById("gameCanvas");
+        const ctx = canvas.getContext("2d");
+
+        const bird = {
+            x: 50,
+            y: 150,
+            width: 30,
+            height: 30,
+            gravity: 0.5,
+            lift: -10,
+            velocity: 0,
+            show() {
+                ctx.fillStyle = "yellow";
+                ctx.fillRect(this.x, this.y, this.width, this.height);
+            },
+            update() {
+                this.velocity += this.gravity;
+                this.y += this.velocity;
+                if (this.y + this.height >= canvas.height) {
+                    this.y = canvas.height - this.height;
+                    this.velocity = 0;
+                }
+                if (this.y < 0) {
+                    this.y = 0;
+                    this.velocity = 0;
+                }
+            },
+            flap() {
+                this.velocity += this.lift;
+            }
+        };
+
+        const pipes = [];
+        let frameCount = 0;
+        const pipeWidth = 50;
+        const pipeGap = 100;
+
+        function addPipe() {
+            const height = Math.random() * (canvas.height - pipeGap - 20) + 10;
+            pipes.push({ x: canvas.width, height });
+        }
+
+        function updatePipes() {
+            for (let i = pipes.length - 1; i >= 0; i--) {
+                pipes[i].x -= 2;
+                if (pipes[i].x + pipeWidth < 0) {
+                    pipes.splice(i, 1);
+                }
+            }
+        }
+
+        function drawPipes() {
+            ctx.fillStyle = "green";
+            for (const pipe of pipes) {
+                ctx.fillRect(pipe.x, 0, pipeWidth, pipe.height);
+                ctx.fillRect(pipe.x, pipe.height + pipeGap, pipeWidth, canvas.height - pipe.height - pipeGap);
+            }
+        }
+
+        function gameLoop() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            bird.update();
+            bird.show();
+            updatePipes();
+            drawPipes();
+
+            if (frameCount % 75 === 0) {
+                addPipe();
+            }
+
+            frameCount++;
+            requestAnimationFrame(gameLoop);
+        }
+
+        window.addEventListener("keydown", () => bird.flap());
+        gameLoop();
+    </script>
+</body>
+</html>
